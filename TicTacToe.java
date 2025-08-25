@@ -1,23 +1,10 @@
 import java.util.Scanner;
 
-
-// TODO
-// - allow entering into grids
-// - make game algorithm
-// - implement rules
-// - add additional things (score tracker, choosse to play again)
-
-
-
 public class TicTacToe {
-    
-    // X | O | X
-    // ---------
-    // X | O | X
-    // ---------
-    // X | O | X
 
-
+    /**
+     * Prints desired characters up to provided count
+     */
     public static void printRepeatedChars(char ch, int count) { 
         for(int i = 0; i < count; i ++) {
             System.out.print(ch);
@@ -25,11 +12,15 @@ public class TicTacToe {
         System.out.println();
     }
 
+
+    /**
+     * prints TicTacToe Board
+     */
     public static void printBoard(char[][] board) { 
 
-        for(int i = 0; i < board.length; i++) {
+        for(int i = 0; i < 3; i++) {
 
-            for (int j = 0; j < board[i].length; j++) {
+            for (int j = 0; j < 3; j++) {
                 System.out.print(board[i][j]); // print value
                 
                 if (j != board[i].length - 1){
@@ -42,10 +33,30 @@ public class TicTacToe {
             if(i == 0 || i == 1){ // print horizontal borders
                 printRepeatedChars('-', 9);
             }
-        }
-        
+        } 
     }
 
+    /**
+     * Checks whether there is a winner to the game
+     */
+    public static boolean checkWinner(char[][] board, int row, int col, char symbol) {
+
+        boolean rowWin = true, colWin = true, diagWin = true, antiDiagWin = true;
+
+        for (int i = 0; i < 3; i++) {
+            rowWin &= board[row][i] == symbol;
+            colWin &= board[i][col] == symbol;
+            diagWin &= board[i][i] == symbol;
+            antiDiagWin &= board[i][2 - i] == symbol;
+        }
+        return rowWin || colWin || (row == col && diagWin) || (row + col == 2 && antiDiagWin);
+    }
+
+
+
+    /**
+     * Plays the game
+     */
     public static void playGame(char[][] board) {
 
         Scanner scanner = new Scanner(System.in);
@@ -64,6 +75,11 @@ public class TicTacToe {
             int col = Integer.parseInt(values[1]) - 1;
 
             board[row][col] = 'X';
+            
+            if(checkWinner(board, row, col, 'X')) {
+                System.out.println("You won!");
+                return;
+            }
 
             // check if value already in the box
             // check if there are three in a row anywheree
